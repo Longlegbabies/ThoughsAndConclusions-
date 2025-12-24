@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulation</title>
+
+  <style>
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    @font-face {
+      font-family: 'BlackNory';
+      src: url('BlackNory-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    body {
+      background-color: #fff;
+      color: #000;
+      font-family: 'BlackNory', Impact, 'Arial Black', sans-serif;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 2vw;
+      position: relative;
+    }
+
+    .eyes {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      position: absolute;
+      top: 5%;
+    }
+
+    .eye {
+      width: 240px;
+      height: 120px;
+      background: #000;
+      border-radius: 50% / 50%;
+      position: relative;
+      overflow: hidden;
+      transform: rotate(0deg);
+    }
+
+    .pupil {
+      width: 40px;
+      height: 40px;
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition: transform 0.05s;
+    }
+
+    .stage {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .statement {
+      display: inline-block;
+      text-align: center;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      font-size: 1.7rem;
+      transform-origin: center center;
+      will-change: transform;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+
+    .statement span {
+      display: inline-block;
+      font-family: 'BlackNory', Impact, 'Arial Black', sans-serif;
+      cursor: default;
+      transition: transform 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="eyes">
+    <div class="eye"><div class="pupil"></div></div>
+    <div class="eye"><div class="pupil"></div></div>
+  </div>
+  <div class="stage">
+    <div class="statement" id="statement">
+      After reading Simulation and Simulacra by Jean Builldriard. I realized, many of the things we see are copies of copies, modified and packaged so much that they no longer correspond to the original. Reality becomes a theater we watch rather than live.
+
+Consider Disney. The example is great. Neither castles nor princesses nor towns depict life. Consistent, polished, regulated life seems real. As children, we learn “how things are supposed to be.” The world outside the walls is different. Our minds constantly compare reality to imagination.
+
+When you see the copy instead of the "truth," everything changes. Your perception of reality, expectations, and taste may become distorted. Everything is constructed. Marketing, social media, trends, even how individuals “perform” coolness.
+
+It may be confusing and lonely. It's liberating too. After seeing the simulation, you wonder: What do I want? Feels real to me? I'm absorbing what because someone made it necessary?
+    </div>
+  </div>
+
+  <script>
+    const statement = document.getElementById('statement');
+
+
+    const words = statement.textContent.split(/(\s+)/).map(word => {
+      if (word.trim() === '') return word;
+      return `<span>${word}</span>`;
+    }).join('');
+    statement.innerHTML = words;
+
+    const spans = statement.querySelectorAll('span');
+
+    function handleMouseMove(e) {
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+
+      spans.forEach(span => {
+        const rect = span.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        const dx = centerX - mouseX;
+        const dy = centerY - mouseY;
+        const distance = Math.sqrt(dx*dx + dy*dy);
+
+        if(distance < 100) {
+          const moveX = dx / distance * 50;
+          const moveY = dy / distance * 50;
+          span.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        } else {
+          span.style.transform = `translate(0px, 0px)`;
+        }
+      });
+
+
+      const pupils = document.querySelectorAll('.pupil');
+      pupils.forEach(pupil => {
+        const eyeRect = pupil.parentElement.getBoundingClientRect();
+        const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+        const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+
+        const dx = mouseX - eyeCenterX;
+        const dy = mouseY - eyeCenterY;
+        const angle = Math.atan2(dy, dx);
+        const dist = Math.min(25, Math.hypot(dx, dy)/10);
+
+        const offsetX = Math.cos(angle) * dist;
+        const offsetY = Math.sin(angle) * dist;
+
+        pupil.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
+      });
+    }
+
+    document.addEventListener('mousemove', handleMouseMove);
+
+    function fitText() {
+      statement.style.transform = 'scale(1,1)';
+      const rect = statement.getBoundingClientRect();
+      const scaleX = window.innerWidth / rect.width;
+      const scaleY = window.innerHeight / rect.height;
+      const scale = Math.min(scaleX, scaleY, 1);
+      statement.style.transform = `scale(${scale}, ${scale})`;
+    }
+
+    window.addEventListener('resize', fitText);
+    window.addEventListener('load', fitText);
+  </script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Childhood Feelings</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      color: #000;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      height: 100vh;
+    }
+
+    .container img {
+      width: 300px;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .container .text {
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: bold;
+    }
+
+    .drop {
+      position: absolute;
+      font-size: 5rem;
+      pointer-events: none;
+      animation: fallBounce 1.5s ease forwards;
+    }
+
+    @keyframes fallBounce {
+      0% { transform: translateY(0); }
+      70% { transform: translateY(calc(100vh - var(--clickY) - 60px)); }
+      85% { transform: translateY(calc(100vh - var(--clickY) - 90px)); }
+      95% { transform: translateY(calc(100vh - var(--clickY) - 70px)); }
+      100% { transform: translateY(calc(100vh - var(--clickY) - 80px)); }
+    }
+
+    .overlay-text {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(40px, 6vw, 96px);
+      font-weight: bold;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+      z-index: 10;
+    }
+
+    .overlay-text.show {
+      opacity: 1;
+    }
+
+    .conversation {
+      position: fixed;
+      inset: 0;
+      padding: 5vw;
+      display: flex;
+      flex-direction: column;
+      gap: 8vh;
+      font-size: clamp(20px, 2.2vw, 30px);
+      font-family: Arial, sans-serif;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .conversation.show{
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .row{
+      display:flex;
+      justify-content:space-between;
+      gap:4vw;
+    }
+
+    .left, .right{
+      width:45%;
+      white-space:pre-wrap;
+    }
+
+    .left{ text-align:left; }
+    .right{ text-align:right; }
+
+    .cursor::after{
+      content:"▌";
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%,50%,100%{opacity:1;}
+      25%,75%{opacity:0;}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="mainContent">
+    <img src="blahblah.gif" alt="Childhood GIF">
+    <div class="text">i miss being a kid</div>
+  </div>
+
+  <div class="overlay-text" id="overlayText"></div>
+
+  <div class="conversation" id="conversation">
+    <div class="row">
+      <div class="left" id="l1"></div>
+      <div class="right" id="r1"></div>
+    </div>
+    <div class="row">
+      <div class="left" id="l2"></div>
+      <div class="right" id="r2"></div>
+    </div>
+    <div class="row">
+      <div class="left" id="l3"></div>
+      <div class="right" id="r3"></div>
+    </div>
+    <div class="row">
+      <div class="left" id="l4"></div>
+      <div class="right" id="r4"></div>
+    </div>
+  </div>
+
+  <script>
+    let clickCount = 0;
+    let phase = "intro"; 
+
+    const mainContent = document.getElementById('mainContent');
+    const overlay = document.getElementById('overlayText');
+    const convo = document.getElementById('conversation');
+
+    const l1 = document.getElementById('l1');
+    const r1 = document.getElementById('r1');
+    const l2 = document.getElementById('l2');
+    const r2 = document.getElementById('r2');
+    const l3 = document.getElementById('l3');
+    const r3 = document.getElementById('r3');
+    const l4 = document.getElementById('l4');
+    const r4 = document.getElementById('r4');
+
+    const typeSpeed = 90;
+
+    document.addEventListener('click', (e) => {
+      if(phase === "finalClick" || overlay.classList.contains('show')) return;
+
+      if(phase === "intro") {
+        clickCount++;
+        const drop = document.createElement('div');
+        drop.classList.add('drop');
+        drop.textContent = '💧';
+        drop.style.setProperty('--clickY', e.pageY + 'px');
+        drop.style.left = e.pageX + 'px';
+        drop.style.top = e.pageY + 'px';
+        document.body.appendChild(drop);
+
+        if(clickCount >= 8) {
+          triggerSequence();
+        }
+      } else if(phase === "conversation") {
+
+        convo.classList.remove('show');
+        showFinalMessages();
+      }
+    });
+
+    function triggerSequence() {
+      document.querySelectorAll('.drop').forEach(el => el.remove());
+      mainContent.style.display = 'none';
+
+
+      overlay.textContent = "are you homesick?";
+      overlay.classList.add('show');
+
+      setTimeout(() => {
+        overlay.classList.remove('show');
+
+        setTimeout(() => {
+
+          overlay.textContent = "atleast i am";
+          overlay.classList.add('show');
+
+          setTimeout(() => {
+            overlay.classList.remove('show');
+            phase = "conversation";
+            startConversation();
+          }, 5000);
+
+        }, 800);
+      }, 5000);
+    }
+
+    function typeText(el, text, cb) {
+      let i = 0;
+      el.classList.add('cursor');
+      const interval = setInterval(() => {
+        el.textContent += text.charAt(i);
+        i++;
+        if(i >= text.length){
+          clearInterval(interval);
+          el.classList.remove('cursor');
+          if(cb) setTimeout(cb, 600);
+        }
+      }, typeSpeed);
+    }
+
+    function startConversation() {
+      convo.classList.add('show');
+
+
+      typeText(l1, "i miss being a kid, i miss being home", () => {
+        typeText(r1, "why tho?", () => {
+          typeText(l2, "i miss having a structure, easy answers, time, understanding, and company.", () => {
+            typeText(r2, "i feel you. As a kid, we didn't have to constantly decide and doubt ourselves. Time felt slower, softer even. Having company from people who already know you without you explaining feels nice right?", () => {
+              typeText(l3, "Yes, very", () => {
+
+                typeText(l4, "I feel behind and lost, so i find excuses and distractions for myself to feel like I am on the right track", () => {
+                  typeText(r4, "The distractions, the excuses, the busy work. Thats you trying to recreate a sense of \"safety\" for yourself in this overwhelming world. Most people bury that under noise. Makes us feel grounded");
+                });
+              });
+            });
+          });
+        });
+      });
+    }
+
+    function showFinalMessages() {
+      phase = "finalClick";
+      overlay.textContent = "yea i guess";
+      overlay.classList.add('show');
+
+      setTimeout(() => {
+        overlay.classList.remove('show');
+
+        setTimeout(() => {
+          overlay.textContent = "i still feel homesick tho";
+          overlay.classList.add('show');
+
+          setTimeout(() => {
+            overlay.classList.remove('show');
+            resetCycle();
+          }, 5000);
+
+        }, 600);
+
+      }, 5000);
+    }
+
+    function resetCycle() {
+
+      clickCount = 0;
+      phase = "intro";
+
+
+      [l1,r1,l2,r2,l3,r3,l4,r4].forEach(el => el.textContent = "");
+
+
+      mainContent.style.display = 'flex';
+    }
+  </script>
+
+</body>
+</html>

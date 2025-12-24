@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Conversation</title>
+  <style>
+    :root{
+      --bg: #000;
+      --text-red: #e11;
+      --text-white: #fff;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      background:var(--bg);
+      font-family: Impact, Arial Black, sans-serif;
+      overflow:hidden;
+    }
+
+
+    .splash {
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      background:var(--bg);
+    }
+
+    .splash__text{
+      font-size: clamp(28px, 6vw, 96px);
+      line-height: 1;
+      color: var(--text-red);
+      text-align:center;
+      opacity:0;
+      transform: translateY(-12px);
+      transition: opacity 800ms ease, transform 800ms ease;
+      padding: 0 1rem;
+    }
+
+    .splash--visible .splash__text{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    .splash--hidden .splash__text{
+      opacity:0;
+      transform: translateY(-12px);
+    }
+
+
+    .conversation {
+      position:fixed;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      gap: 4vh;
+      padding: 4vw;
+      box-sizing:border-box;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity 800ms ease;
+    }
+
+    .conversation--visible{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .row{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap: 4vw;
+    }
+
+    .bubble{
+      width:45%;
+      color:var(--text-white);
+      font-size: clamp(18px, 2.2vw, 28px);
+      line-height:1.25;
+      font-family: Arial, sans-serif;
+      white-space:pre-wrap;
+    }
+
+    .left{
+      text-align:left;
+    }
+
+    .right{
+      text-align:right;
+    }
+
+    .cursor::after{
+      content: "▌";
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink{
+      0%,50%,100%{opacity:1;}
+      25%,75%{opacity:0;}
+    }
+
+
+    #clickGif{
+      position:absolute;
+      pointer-events:none;
+      display:none;
+      transform:translate(-50%, -50%);
+      width:200px;
+      height:auto;
+      z-index:1000;
+    }
+  </style>
+</head>
+<body>
+
+
+  <div class="splash" id="splash">
+    <div class="splash__text">
+      If the internet disappeared, what parts of you would stay the same?
+    </div>
+  </div>
+
+
+  <div class="conversation" id="conversation">
+
+
+    <div class="row">
+      <div class="bubble left" id="leftText1"></div>
+      <div class="bubble right" id="rightText1"></div>
+    </div>
+
+
+    <div class="row">
+      <div class="bubble left" id="leftText2"></div>
+      <div class="bubble right" id="rightText2"></div>
+    </div>
+
+
+    <div class="row">
+      <div class="bubble left" id="leftText3"></div>
+      <div class="bubble right" id="rightText3"></div>
+    </div>
+
+  </div>
+
+
+  <img id="clickGif" src="" />
+
+  <script>
+    const splash = document.getElementById('splash');
+    const convo = document.getElementById('conversation');
+
+    const left1 = document.getElementById('leftText1');
+    const right1 = document.getElementById('rightText1');
+    const left2 = document.getElementById('leftText2');
+    const right2 = document.getElementById('rightText2');
+    const left3 = document.getElementById('leftText3');
+    const right3 = document.getElementById('rightText3');
+    const clickGif = document.getElementById('clickGif');
+
+    const introDuration = 5000;
+    const typeSpeed = 40;
+
+    let conversationEnded = false;
+
+    const leftMessage1 = "You ever think about how some people just feel cool without trying? Not just confidence or clothes, like real taste";
+    const rightMessage1 = "Yes I do, and I think experiencing is a part of being human.";
+
+    const leftMessage2 = `RIGHTTTT!! The whole point is experiencing, not collecting moments to show others. That feels curated version of yourself for a sense of approval.`;
+    const rightMessage2 = `But how do you define experience. Maybe thats because we evolve as humans. What we create are all distractions. Some people truly believe what they consume on social media are experiences that they could pile up and "show off"`;
+
+    const leftMessage3 = "Consumption tries to fill you.\nExperience transforms you.";
+    const rightMessage3 = "🤯";
+
+    requestAnimationFrame(() => {
+      splash.classList.add('splash--visible');
+    });
+
+    function hideSplash() {
+      splash.classList.remove('splash--visible');
+      splash.classList.add('splash--hidden');
+
+      setTimeout(() => {
+        splash.remove();
+        convo.classList.add('conversation--visible');
+        typeLeft1();
+      }, 800);
+    }
+
+    setTimeout(hideSplash, introDuration);
+
+    function typeText(el, text, callback) {
+      let i = 0;
+      el.classList.add('cursor');
+      const interval = setInterval(() => {
+        el.textContent += text.charAt(i);
+        i++;
+        if (i >= text.length) {
+          clearInterval(interval);
+          el.classList.remove('cursor');
+          if (callback) setTimeout(callback, 600);
+        }
+      }, typeSpeed);
+    }
+
+    function typeLeft1() { typeText(left1, leftMessage1, typeRight1); }
+    function typeRight1() { typeText(right1, rightMessage1, typeLeft2); }
+    function typeLeft2() { typeText(left2, leftMessage2, typeRight2); }
+    function typeRight2() { typeText(right2, rightMessage2, typeLeft3); }
+    function typeLeft3() { typeText(left3, leftMessage3, typeRight3); }
+    function typeRight3() { 
+      typeText(right3, rightMessage3, () => { 
+        conversationEnded = true; 
+      }); 
+    }
+
+
+    const gifSrc = 'explosion.gif'; 
+    document.addEventListener('click', (e) => {
+      if (!conversationEnded) return;
+
+      clickGif.src = gifSrc;
+      clickGif.style.left = e.pageX + 'px';
+      clickGif.style.top = e.pageY + 'px';
+      clickGif.style.display = 'block';
+
+      setTimeout(() => {
+        clickGif.style.display = 'none';
+      }, 1000);
+    });
+  </script>
+
+</body>
+</html>

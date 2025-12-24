@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thoughts</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: Impact, Charcoal, sans-serif;
+            text-align: center;
+        }
+
+        #mainText {
+            font-size: 6rem;
+            margin-bottom: 50px;
+        }
+
+        #imageContainer {
+            display: flex;
+            gap: 50px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* wrap on smaller screens */
+        }
+
+        #imageContainer img, .css-eye {
+            width: 150px;
+            height: 150px;
+            cursor: pointer;
+        }
+
+        /* CSS Eye */
+        .css-eye {
+            position: relative;
+            background: white;
+            border-radius: 50%; /* outer eye */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .css-eye::before {
+            content: '';
+            width: 60px;
+            height: 60px;
+            background: black;
+            border-radius: 50%; /* pupil */
+        }
+
+        .css-eye::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%; /* highlight */
+            top: 35px;
+            left: 55px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mainText">Thoughts and conclusions?</div>
+
+    <div id="imageContainer">
+        <!-- Brain image linking to Entry 1 -->
+        <a href="file:///Users/helenhuang/Desktop/Interactive%20Design/harmonic%20collection/entry1/entry%201.html">
+            <img src="brain.png" alt="Brain Image">
+        </a>
+
+        <!-- Explosion GIF linking to Entry 2 -->
+        <a href="file:///Users/helenhuang/Desktop/Interactive%20Design/harmonic%20collection/entry%202/entry%202.html">
+            <img src="explosion.gif" alt="Explosion GIF">
+        </a>
+
+        <!-- Blahblahblah GIF linking to Entry 3 -->
+        <a href="file:///Users/helenhuang/Desktop/Interactive%20Design/harmonic%20collection/entry%203/entry3.html">
+            <img src="blahblahblah.gif" alt="Blahblahblah GIF">
+        </a>
+
+        <!-- CSS Eye linking to Entry 4 -->
+        <a href="file:///Users/helenhuang/Desktop/Interactive%20Design/harmonic%20collection/entry%204%20/entry4.html">
+            <div class="css-eye"></div>
+        </a>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>my brain feels dry</title>
+<style>
+  body {
+    margin: 0;
+    background: #fff;
+    font-family: "Georgia", serif;
+    overflow: hidden;
+  }
+
+  /* Bottom stretched "my brain feels dry" */
+  .sticky {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(255,255,255,0.85) 60%,
+      #fff 100%
+    );
+    padding: 20px 5vw;
+    box-sizing: border-box;
+  }
+
+  .sticky span {
+    font-family: "Impact","Haettenschweiler","Arial Black",sans-serif;
+    font-size: 12vw;
+    text-transform: uppercase;
+    color: #000;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1vw;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .sticky img {
+    height: 1em;
+    width: auto;
+    vertical-align: middle;
+  }
+
+  @media (max-width: 400px) {
+    .sticky span {
+      font-size: 14vw;
+      gap: 2vw;
+    }
+  }
+
+  /* Top-right typing effect */
+  .typing-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    max-width: 60vw;
+    font-size: clamp(16px, 1.5vw, 24px);
+    line-height: 1.6;
+    color: #111;
+
+    white-space: pre-wrap;
+    overflow: hidden;
+    border-right: 2px solid black; /* blinking cursor */
+    width: 0;
+    box-sizing: border-box;
+    animation: typing 40s steps(600, end) forwards, blink 0.7s step-end infinite;
+  }
+
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  @keyframes blink {
+    50% { border-color: transparent; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top-right typing paragraph -->
+<div class="typing-container">
+Proximity matters. There are so many things in life that feel “not that deep” until they’re happening to you or right around you. Like, you might scroll past someone copying an aesthetic or a style online and think, “whatever, it’s not a big deal.” But then, when it’s your friend doing it, or it’s happening in your circle, suddenly it stings. Suddenly, it matters. It’s wild how context changes everything. Distance makes things abstract, and closeness makes them real. That’s why so many small moments feel bigger when they touch your life directly, and why you notice the little betrayals, the small imitations, and the tiny moments of care or disrespect way more when they’re in your own space.
+</div>
+
+<!-- Bottom stretched "my brain feels dry" -->
+<div class="sticky">
+  <span>
+    my 
+    <img src="brain.png" alt="brain">
+    feels dry
+  </span>
+</div>
+
+</body>
+</html>
